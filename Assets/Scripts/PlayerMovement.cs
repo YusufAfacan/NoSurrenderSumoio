@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         inputVector = inputVector.normalized;
 
         Vector3 pos = transform.position;
-        Vector3 toPosition = pos + movementSpeed * Time.deltaTime * inputVector;
+        Vector3 toPosition = pos + wrestler.moveSpeed * Time.deltaTime * inputVector;
         Quaternion toRotation = Quaternion.LookRotation(rotationSpeed * Time.fixedDeltaTime * inputVector, Vector3.up);
 
         rb.Move(toPosition, toRotation);

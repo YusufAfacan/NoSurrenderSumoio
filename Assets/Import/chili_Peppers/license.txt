@@ -1,0 +1,11 @@
+Model Information:
+* title:	chili Peppers
+* source:	https://sketchfab.com/3d-models/chili-peppers-bdfb895d8170414280258099a99f8edc
+* author:	TrinhZin (https://sketchfab.com/TrinhZin)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "chili Peppers" (https://sketchfab.com/3d-models/chili-peppers-bdfb895d8170414280258099a99f8edc) by TrinhZin (https://sketchfab.com/TrinhZin) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
