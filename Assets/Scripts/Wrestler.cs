@@ -1,6 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using System;
 using System.Collections;
 
 public class Wrestler : MonoBehaviour
@@ -95,14 +94,15 @@ public class Wrestler : MonoBehaviour
 
                 if (enemyAngle < 120f)
                 {
-                    colliderWrestlerRb.AddForce(FrontToFrontApplied * bodySize * forceDirection, ForceMode.Impulse);
-
                     if (isOnFever)
                     {
-                        return;
+                        colliderWrestlerRb.AddForce(feverMultiplier * FrontToFrontApplied * bodySize * forceDirection, ForceMode.Impulse);
                     }
-
-                    rb.AddForce(FrontToFrontTaken / bodySize * -forceDirection, ForceMode.Impulse);
+                    else
+                    {
+                        colliderWrestlerRb.AddForce(FrontToFrontApplied * bodySize * forceDirection, ForceMode.Impulse);
+                        rb.AddForce(FrontToFrontTaken / bodySize * -forceDirection, ForceMode.Impulse);
+                    }
 
                     Debug.Log("to the front of " + collidedWrestler.transform.name);
                 }
@@ -141,6 +141,11 @@ public class Wrestler : MonoBehaviour
 
         if (other.CompareTag("Water"))
         {
+            if (lastHitBy == null)
+            {
+                return;
+            }
+
             lastHitBy.IncreaseBodySize();
         }
     }

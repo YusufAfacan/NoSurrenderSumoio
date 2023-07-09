@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -13,10 +11,9 @@ public class Player : MonoBehaviour
     public event EventHandler OnDie;
 
     private WrestlerCounter wrestlerCounter;
-    private CameraControl cameraControl;
     private Timer timer;
 
-    [HideInInspector] public BotAI lastHitBy;
+    [HideInInspector] public Bot lastHitBy;
 
     private void Awake()
     {
@@ -25,7 +22,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        cameraControl = CameraControl.Instance;
+
         wrestlerCounter = WrestlerCounter.Instance;
         timer = Timer.Instance;
         
@@ -57,20 +54,25 @@ public class Player : MonoBehaviour
             OnHealthKitPicked?.Invoke(this, EventArgs.Empty);
         }
 
-        if (other.CompareTag("Water"))
+        
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Arena"))
         {
             OnDie?.Invoke(this, EventArgs.Empty);
 
             gameObject.SetActive(false);
         }
-
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.GetComponent<BotAI>())
+        if (collision.transform.GetComponent<Bot>())
         {
-            lastHitBy = collision.transform.GetComponent<BotAI>();
+            lastHitBy = collision.transform.GetComponent<Bot>();
         }
     }
 }

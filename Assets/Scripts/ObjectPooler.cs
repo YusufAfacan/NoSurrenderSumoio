@@ -11,6 +11,8 @@ public class ObjectPooler : MonoBehaviour
 
     public static ObjectPooler Instance;
 
+    public event EventHandler OnObjectSpawned;
+
     private Timer timer;
 
     [Serializable]
@@ -20,8 +22,8 @@ public class ObjectPooler : MonoBehaviour
         public GameObject prefab;
         public int size;
         public Transform parent;
-        public int spawnTime;
-        public int spawnInterval;
+        public float spawnTime;
+        public float spawnInterval;
     }
 
     public List<Pool> pools;
@@ -105,6 +107,8 @@ public class ObjectPooler : MonoBehaviour
             prefab.transform.DOShakeScale(0.5f, 0.5f);
 
             poolDictionary[tag].Enqueue(prefab);
+
+            OnObjectSpawned?.Invoke(this, EventArgs.Empty);
 
             yield return new WaitForSeconds(interval);
         }

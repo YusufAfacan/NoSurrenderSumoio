@@ -7,7 +7,7 @@ using UnityEngine;
 public class WrestlerCounter : MonoBehaviour
 {
     public static WrestlerCounter Instance;
-    public BotAI[] botsInGame;
+    public Bot[] botsInGame;
     public int aliveBotAmount;
     public TextMeshProUGUI text;
 
@@ -21,9 +21,9 @@ public class WrestlerCounter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        botsInGame = FindObjectsOfType<BotAI>();
+        botsInGame = FindObjectsOfType<Bot>();
 
-        foreach (BotAI bot in botsInGame)
+        foreach (Bot bot in botsInGame)
         {
             bot.OnDie += Bot_OnDie;
         }

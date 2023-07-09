@@ -12,7 +12,7 @@ public class ScoreCounter : MonoBehaviour
     public TextMeshProUGUI text;
     // Start is called before the first frame update
 
-    public BotAI[] botsInGame;
+    public Bot[] botsInGame;
 
     private void Awake()
     {
@@ -21,19 +21,19 @@ public class ScoreCounter : MonoBehaviour
     }
     void Start()
     {
-        botsInGame = FindObjectsOfType<BotAI>();
+        botsInGame = FindObjectsOfType<Bot>();
 
         Player player = FindObjectOfType<Player>();
 
         player.OnHealthKitPicked += Player_OnHealthKitPicked;
 
-        foreach (BotAI bot in botsInGame)
+        foreach (Bot bot in botsInGame)
         {
             bot.OnDefeatedByPlayer += Bot_OnDefeatedByPlayer;
         }
     }
 
-    private void Bot_OnDefeatedByPlayer(object sender, BotAI.OnDefeatedByPlayerEventArgs e)
+    private void Bot_OnDefeatedByPlayer(object sender, Bot.OnDefeatedByPlayerEventArgs e)
     {
         
         currentScore += botDefeatBaseValue + ((int)(e.bodySize * 1000));

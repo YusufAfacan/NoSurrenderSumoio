@@ -1,11 +1,13 @@
 using System;
+using TMPro;
 using UnityEngine;
 
-public class BotAI : MonoBehaviour
+public class Bot : MonoBehaviour
 {
     private Wrestler wrestler;
     public bool lastHitByPlayer;
     public string wrestlerName;
+    public TextMeshPro nameText;
 
     public event EventHandler OnDie;
     public event EventHandler<OnDefeatedByPlayerEventArgs> OnDefeatedByPlayer;
@@ -19,6 +21,10 @@ public class BotAI : MonoBehaviour
         wrestler = GetComponent<Wrestler>();
     }
 
+    private void Start()
+    {
+        nameText.text = wrestlerName;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -32,9 +38,14 @@ public class BotAI : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionExit(Collision collision)
     {
-        if (other.CompareTag("Water"))
+       
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Arena"))
         {
             if (lastHitByPlayer)
             {
@@ -48,6 +59,14 @@ public class BotAI : MonoBehaviour
             OnDie?.Invoke(this, EventArgs.Empty);
 
             gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            
         }
 
         
