@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static BotAI;
+using DG.Tweening;
+
 
 public class Player : MonoBehaviour
 {
@@ -10,13 +11,30 @@ public class Player : MonoBehaviour
 
     public event EventHandler OnHealthKitPicked;
     public event EventHandler OnDie;
-    public BotAI lastHitBy;
 
+    private WrestlerCounter wrestlerCounter;
+    private CameraControl cameraControl;
+
+    public BotAI lastHitBy;
 
     private void Awake()
     {
         Instance = this;
     }
+
+    private void Start()
+    {
+        cameraControl = CameraControl.Instance;
+        wrestlerCounter = WrestlerCounter.Instance;
+        
+        wrestlerCounter.OnNoBotRemaining += WrestlerCounter_OnNoBotRemaining;
+    }
+
+    private void WrestlerCounter_OnNoBotRemaining(object sender, EventArgs e)
+    {
+        transform.DOLookAt(cameraControl.WinCam.transform.position, 0.5f);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<HealthKit>() != null)

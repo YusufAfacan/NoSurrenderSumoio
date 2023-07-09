@@ -7,11 +7,11 @@ using Random = UnityEngine.Random;
 
 public class ObjectPooler : MonoBehaviour
 {
+    [SerializeField] private float spawnRadius;
+
     public static ObjectPooler Instance;
 
-    public event EventHandler OnHealthKitSpawned;
     private Timer timer;
-
 
     [Serializable]
     public class Pool
@@ -28,18 +28,18 @@ public class ObjectPooler : MonoBehaviour
 
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
+    
 
     private void Awake()
     {
         Instance = this;
-        InitiliazePools();
-        
-        //InvokeRepeating(nameof(SpawnHealthKit), 5, 2);
     }
 
     private void Start()
     {
         timer = Timer.Instance;
+
+        InitiliazePools();
     }
 
     private void InitiliazePools()
@@ -52,7 +52,11 @@ public class ObjectPooler : MonoBehaviour
 
             // what amount of object going to be needed during game is calculated
             // and instantiated beforehand
-            pool.size = Mathf.CeilToInt(timer.gameTime / pool.spawnInterval);
+
+            if (pool.spawnInterval > 0)
+            {
+                pool.size = Mathf.CeilToInt(timer.gameTime / pool.spawnInterval);
+            }
 
             for (int i = 0; i < pool.size; i++)
             {
@@ -64,53 +68,56 @@ public class ObjectPooler : MonoBehaviour
 
             poolDictionary.Add(pool.tag, objectPool);
 
-            StartCoroutine(StartSpawningDuringGame(pool.prefab, pool.spawnTime, pool.spawnInterval, pool.tag));
+
+            // if object has an spawn interval spawning of  object in that interval initiated
+
+            if (pool.spawnInterval > 0)
+            {
+                StartCoroutine(StartSpawningDuringGame(pool.spawnTime, pool.spawnInterval, pool.tag));
+            }
 
         }
     }
 
-    private IEnumerator StartSpawningDuringGame(GameObject prefab, float startTime, float interval, string tag)
+    private IEnumerator StartSpawningDuringGame(float startTime, float interval, string tag)
     {
         yield return new WaitForSeconds(startTime);
 
-
         while (true)
         {
+            GameObject prefab = poolDictionary[tag].Dequeue();
 
-            float xPos = Random.Range(-5f, 5f);
-            float zPos = Random.Range(-4f, 4f);
+            Vector3 spawnPosition;
+
+            // random xPos of spawnPosition
+            float xPos = Random.Range(-spawnRadius, spawnRadius);
+
+            // zPosition of spawnPosition limited so position stays in radius
+            float zBorder = Mathf.Sqrt(Mathf.Pow(spawnRadius,2) - Mathf.Pow(xPos,2));
+            float zPos = Random.Range(-zBorder, zBorder);
+
+            spawnPosition = new Vector3(xPos, 0.25f, zPos);
 
             prefab.SetActive(true);
-            prefab.transform.position = new Vector3(xPos, 0.25f, zPos);
+            prefab.transform.position = spawnPosition;
             prefab.transform.DOShakePosition(0.5f, 0.5f);
             prefab.transform.DOShakeRotation(0.5f, 0.5f);
             prefab.transform.DOShakeScale(0.5f, 0.5f);
 
             poolDictionary[tag].Enqueue(prefab);
 
-
             yield return new WaitForSeconds(interval);
         }
-
     }
 
-
-
-    private void SpawnHealthKit()
+    public GameObject SpawnFromObjectPooler(string tag)
     {
-        GameObject healthKit = poolDictionary["HealthKit"].Dequeue();
+        GameObject prefab = poolDictionary[tag].Dequeue();
 
-        float xPos = Random.Range(-5f, 5f);
-        float zPos = Random.Range(-4f, 4f);
+        prefab.SetActive(true);
 
-        healthKit.SetActive(true);
-        healthKit.transform.position = new Vector3(xPos, 0.25f, zPos);
-        healthKit.transform.DOShakePosition(0.5f, 0.5f);
-        healthKit.transform.DOShakeRotation(0.5f, 0.5f);
-        healthKit.transform.DOShakeScale(0.5f, 0.5f);
+        poolDictionary[tag].Enqueue(prefab);
 
-
-        poolDictionary["HealthKit"].Enqueue(healthKit);
-        OnHealthKitSpawned?.Invoke(this, EventArgs.Empty);
+        return prefab;
     }
 }

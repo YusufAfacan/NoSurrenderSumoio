@@ -5,20 +5,27 @@ using System.Collections;
 
 public class Wrestler : MonoBehaviour
 {
+    [Header("Movement")]
     public bool canMove;
     public float moveSpeed;
-    public bool isOnFever;
-    public float bodySize; // size of body effects both physical appearance regardig transform scale and forces to be applied
-    public float bodySizeIncrement; // size of body effects both physical appearance regardig transform scale and forces to be applied
+
+    [Header("Bodysize")]
+    public float bodySize; // size of body effects both physical appearance regardig transform scale and forces to be applied and taken
+    public float bodySizeIncrement; // increase in bodySize for each item pickup
+    [SerializeField] private float maxBodySize;
+
+    [Header("Force and force related")]
+    public bool isOnFever; // wrestlers can be on fever by picking up correlated item 
+    public float feverMultiplier; // force amplifier value in fever mode
     public float FrontToFrontApplied; // base amount of force applied to opponent when intentionally ramming
     public float FrontToFrontTaken; // base amount of force applied to self when intentionally ramming
     public float FrontToBehindApplied; // base amount force applied both wrestler ramming head to head
-
     public float FrontToBehindTaken; // base amount of force applied to self when unintentionally ramming
     public float bounceOffTaken; // base amount of force applied to self when unintentionally ramming
 
-   
+    [SerializeField] private GameObject feverFireFX;
 
+    private ObjectPooler pooler;
     private Rigidbody rb;
 
     private void Awake()
@@ -29,7 +36,7 @@ public class Wrestler : MonoBehaviour
     void Start()
     {
         canMove = true;
-
+        pooler = ObjectPooler.Instance;
     }
 
     private void OnCollisionEnter(Collision Collision)
@@ -39,8 +46,11 @@ public class Wrestler : MonoBehaviour
         {
             Vector3 pos = transform.position;
             Vector3 collidedWrestlerPos = collidedWrestler.transform.position;
+
+            //detection direction of force to be applied
             Vector3 forceDirection = collidedWrestlerPos - pos;
             forceDirection.Normalize();
+
             // get rigidbody of opponent to apply force later on
             Rigidbody colliderWrestlerRb = collidedWrestler.GetComponent<Rigidbody>();
 
@@ -50,8 +60,9 @@ public class Wrestler : MonoBehaviour
 
             // get position where collision happened
             Vector3 firstContactPoint = (transform.position + collidedWrestler.transform.position) / 2;
+
             //angles between where collision happened and looking direction is used to determine if collision happened
-            // in front or rear of wrestler 
+            // in front or rear of wrestler
             float selfAngle = Vector3.Angle(firstContactPoint - transform.position, lookingDir);
             float enemyAngle = Vector3.Angle(firstContactPoint - collidedWrestler.transform.position, enemyLookingDir);
 
@@ -63,29 +74,45 @@ public class Wrestler : MonoBehaviour
 
                 if (enemyAngle >= 120f)
                 {
-                    Debug.Log("to the behind of " + collidedWrestler.transform.name);
+                    if (isOnFever)
+                    {
+                        colliderWrestlerRb.AddForce(bodySize * feverMultiplier * FrontToBehindApplied * forceDirection, ForceMode.Impulse); 
 
-                    colliderWrestlerRb.AddForce(FrontToBehindApplied * bodySize * forceDirection, ForceMode.Impulse); // force applied to enemy amplified by bodySize
-                    rb.AddForce(FrontToBehindTaken / bodySize * -forceDirection, ForceMode.Impulse); // force applied to this mitigated by bodySize
+                        pooler.SpawnFromObjectPooler("HitFX").transform.position = firstContactPoint;
+                    }
+                    else
+                    {
+                        colliderWrestlerRb.AddForce(bodySize * FrontToBehindApplied * forceDirection, ForceMode.Impulse);
+
+                        rb.AddForce(FrontToBehindTaken / bodySize * -forceDirection, ForceMode.Impulse);
+                    }
+
+                    Debug.Log("to the behind of " + collidedWrestler.transform.name);
 
                 }
 
                 if (enemyAngle < 120f)
                 {
-                    Debug.Log("to the front of " + collidedWrestler.transform.name);
+                    colliderWrestlerRb.AddForce(FrontToFrontApplied * bodySize * forceDirection, ForceMode.Impulse);
 
-                    colliderWrestlerRb.AddForce(FrontToFrontApplied * bodySize * forceDirection, ForceMode.Impulse); // force applied to enemy amplified by bodySize
-                    rb.AddForce(FrontToFrontTaken / bodySize * -forceDirection, ForceMode.Impulse); // force applied to this mitigated by bodySize
+                    if (isOnFever)
+                    {
+                        return;
+                    }
+
+                    rb.AddForce(FrontToFrontTaken / bodySize * -forceDirection, ForceMode.Impulse);
+
+                    Debug.Log("to the front of " + collidedWrestler.transform.name);
                 }
 
             }
+
             if (selfAngle > 60f)
             {
                 Debug.Log(transform.name + " hitting with back to " + collidedWrestler.transform.name);
 
-                rb.AddForce(bounceOffTaken / bodySize * -forceDirection, ForceMode.Impulse); // force applied to this mitigated by bodySize
+                rb.AddForce(bounceOffTaken / bodySize * -forceDirection, ForceMode.Impulse);
             }
-
         }
     }
 
@@ -95,6 +122,7 @@ public class Wrestler : MonoBehaviour
         {
             IncreaseBodySize();
             other.gameObject.SetActive(false);
+
         }
 
         if (other.CompareTag("Pepper"))
@@ -102,7 +130,7 @@ public class Wrestler : MonoBehaviour
             if (!isOnFever)
             {
                 StartCoroutine(GoFever());
-
+                other.gameObject.SetActive(false);
             }
 
         }
@@ -112,21 +140,21 @@ public class Wrestler : MonoBehaviour
     {
         isOnFever = true;
         moveSpeed = 10f;
+        feverFireFX.SetActive(true);
         yield return new WaitForSeconds(7);
         isOnFever = false;
         moveSpeed = 5f;
+        feverFireFX.SetActive(false);
 
     }
 
     public void IncreaseBodySize()
     {
         bodySize += bodySizeIncrement;
-        bodySize = Mathf.Clamp(bodySize, 1f, 3f);
+        bodySize = Mathf.Clamp(bodySize, 1f, maxBodySize);
 
         transform.DOScale(bodySize * Vector3.one, 0.5f);
-
     }
-
 }
 
 

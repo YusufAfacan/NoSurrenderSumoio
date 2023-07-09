@@ -7,11 +7,13 @@ using UnityEngine;
 public class WinPanel : MonoBehaviour
 {
     public static WinPanel Instance;
+
+    public GameObject winPanel;
     public TextMeshProUGUI scoreText;
+
     private ScoreCounter pointCounter;
     private WrestlerCounter wrestlerCounter;
-    public GameObject winPanel;
-
+    
     public event EventHandler OnResultShown;
 
     private void Awake()

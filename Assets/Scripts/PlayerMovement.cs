@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Sprites;
@@ -10,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private VariableJoystick joystick;
     private WrestlerAnimator animator;
     private Wrestler wrestler;
+    private Rigidbody rb;
+    private WrestlerCounter wrestlerCounter;
+    public GameObject movementFX;
 
     [SerializeField]
     [Range(0f, 10f)]
@@ -18,13 +22,22 @@ public class PlayerMovement : MonoBehaviour
     [Range(360, 720)]
     private float rotationSpeed;
 
-    private Rigidbody rb;
-
     private void Awake()
     {
         wrestler = GetComponent<Wrestler>();
         animator = GetComponent<WrestlerAnimator>();
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Start()
+    {
+        wrestlerCounter = WrestlerCounter.Instance;
+        wrestlerCounter.OnNoBotRemaining += WrestlerCounter_OnNoBotRemaining;
+    }
+
+    private void WrestlerCounter_OnNoBotRemaining(object sender, EventArgs e)
+    {
+        wrestler.canMove = false;
     }
 
     void FixedUpdate()
@@ -37,6 +50,12 @@ public class PlayerMovement : MonoBehaviour
         if (!wrestler.canMove)
         {
             animator.NotRunning();
+
+            if (movementFX.activeSelf)
+            {
+                movementFX.SetActive(false);
+            }
+
             return;
         }
 
@@ -45,6 +64,12 @@ public class PlayerMovement : MonoBehaviour
         if (inputVector.magnitude <= 0)
         {
             animator.NotRunning();
+
+            if (movementFX.activeSelf)
+            {
+                movementFX.SetActive(false);
+            }
+
             return;
         }
 
@@ -57,7 +82,9 @@ public class PlayerMovement : MonoBehaviour
         rb.Move(toPosition, toRotation);
         animator.Running();
 
-        
-        
+        if (!movementFX.activeSelf)
+        {
+            movementFX.SetActive(true);
+        }
     }
 }
