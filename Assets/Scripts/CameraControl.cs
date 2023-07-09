@@ -6,6 +6,7 @@ public class CameraControl : MonoBehaviour
 {
     public static CameraControl Instance;
 
+    private Timer timer;
     public CinemachineVirtualCamera topDownCam;
     public CinemachineVirtualCamera WinCam;
 
@@ -20,8 +21,15 @@ public class CameraControl : MonoBehaviour
     void Start()
     {
         wrestlerCounter = WrestlerCounter.Instance;
-
+        timer = Timer.Instance;
         wrestlerCounter.OnNoBotRemaining += WrestlerCounter_OnNoBotRemaining;
+        timer.OnTimeUp += Timer_OnTimeUp;
+    }
+
+    private void Timer_OnTimeUp(object sender, EventArgs e)
+    {
+        topDownCam.gameObject.SetActive(false);
+        WinCam.gameObject.SetActive(true);
     }
 
     private void WrestlerCounter_OnNoBotRemaining(object sender, EventArgs e)

@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static ScoreCounter;
 
 public class BotAI : MonoBehaviour
 {
@@ -21,17 +18,7 @@ public class BotAI : MonoBehaviour
     {
         wrestler = GetComponent<Wrestler>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnCollisionEnter(Collision collision)
     {

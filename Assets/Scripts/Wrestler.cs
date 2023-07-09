@@ -28,6 +28,8 @@ public class Wrestler : MonoBehaviour
     private ObjectPooler pooler;
     private Rigidbody rb;
 
+    private Wrestler lastHitBy;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -113,6 +115,8 @@ public class Wrestler : MonoBehaviour
 
                 rb.AddForce(bounceOffTaken / bodySize * -forceDirection, ForceMode.Impulse);
             }
+
+            lastHitBy = collidedWrestler;
         }
     }
 
@@ -133,6 +137,11 @@ public class Wrestler : MonoBehaviour
                 other.gameObject.SetActive(false);
             }
 
+        }
+
+        if (other.CompareTag("Water"))
+        {
+            lastHitBy.IncreaseBodySize();
         }
     }
 

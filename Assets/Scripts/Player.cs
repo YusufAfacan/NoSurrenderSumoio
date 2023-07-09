@@ -14,8 +14,9 @@ public class Player : MonoBehaviour
 
     private WrestlerCounter wrestlerCounter;
     private CameraControl cameraControl;
+    private Timer timer;
 
-    public BotAI lastHitBy;
+    [HideInInspector] public BotAI lastHitBy;
 
     private void Awake()
     {
@@ -26,18 +27,32 @@ public class Player : MonoBehaviour
     {
         cameraControl = CameraControl.Instance;
         wrestlerCounter = WrestlerCounter.Instance;
+        timer = Timer.Instance;
         
         wrestlerCounter.OnNoBotRemaining += WrestlerCounter_OnNoBotRemaining;
+        timer.OnTimeUp += Timer_OnTimeUp;
+    }
+
+    private void Timer_OnTimeUp(object sender, EventArgs e)
+    {
+        LookAtCam();
     }
 
     private void WrestlerCounter_OnNoBotRemaining(object sender, EventArgs e)
     {
-        transform.DOLookAt(cameraControl.WinCam.transform.position, 0.5f);
+        LookAtCam();
+    }
+
+    private void LookAtCam()
+    {
+        transform.DORotate(new Vector3(0f,180,0f), 0.5f);
+        //Vector3 lookAt = new Vector3(cameraControl.WinCam.transform.position.x, transform.position.y, cameraControl.WinCam.transform.position.z);
+        //transform.DOLookAt(lookAt, 0.5f);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<HealthKit>() != null)
+        if (other.CompareTag("HealthKit"))
         {
             OnHealthKitPicked?.Invoke(this, EventArgs.Empty);
         }

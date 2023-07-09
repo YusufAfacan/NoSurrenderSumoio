@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private WrestlerCounter wrestlerCounter;
     public GameObject movementFX;
+    private Timer timer;
 
     [SerializeField]
     [Range(0f, 10f)]
@@ -31,11 +32,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        timer = Timer.Instance;
         wrestlerCounter = WrestlerCounter.Instance;
         wrestlerCounter.OnNoBotRemaining += WrestlerCounter_OnNoBotRemaining;
+        timer.OnTimeUp += Timer_OnTimeUp;
+    }
+
+    private void Timer_OnTimeUp(object sender, EventArgs e)
+    {
+        StopMoving();
     }
 
     private void WrestlerCounter_OnNoBotRemaining(object sender, EventArgs e)
+    {
+        StopMoving();
+    }
+
+    private void StopMoving()
     {
         wrestler.canMove = false;
     }

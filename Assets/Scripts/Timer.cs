@@ -12,6 +12,8 @@ public class Timer : MonoBehaviour
     public float timeRemaining;
     public TextMeshProUGUI timeText;
 
+    public event EventHandler OnTimeUp;
+    private Player player;
     private WrestlerCounter wrestlerCounter;
 
     private void Awake()
@@ -22,9 +24,15 @@ public class Timer : MonoBehaviour
     {
         timeRemaining = gameTime;
         wrestlerCounter = WrestlerCounter.Instance;
-
+        player = Player.Instance;
         InvokeRepeating(nameof(CountDown), 1, 1);
         wrestlerCounter.OnNoBotRemaining += WrestlerCounter_OnNoBotRemaining;
+        player.OnDie += Player_OnDie;
+    }
+
+    private void Player_OnDie(object sender, EventArgs e)
+    {
+        CancelInvoke();
     }
 
     private void WrestlerCounter_OnNoBotRemaining(object sender, EventArgs e)
@@ -38,12 +46,9 @@ public class Timer : MonoBehaviour
         timeText.text =timeRemaining.ToString();
         if (timeRemaining <= 0)
         {
-            TimeIsUp();
+            CancelInvoke();
+            OnTimeUp?.Invoke(this, EventArgs.Empty);
         }
     }
 
-    private void TimeIsUp()
-    {
-        
-    }
 }
