@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class LosePanel : MonoBehaviour
 {
     public static LosePanel Instance;
+
     private ScoreCounter scoreCounter;
     private WrestlerCounter wrestlerCounter;
     private Player player;
@@ -17,7 +16,6 @@ public class LosePanel : MonoBehaviour
     public GameObject losePanel;
 
     public event EventHandler OnResultShown;
-    // Start is called before the first frame update
 
     private void Awake()
     {
@@ -55,6 +53,4 @@ public class LosePanel : MonoBehaviour
 
         OnResultShown?.Invoke(this, EventArgs.Empty);
     }
-
-    
 }

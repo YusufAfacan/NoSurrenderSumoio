@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using DG.Tweening;
 
-
 public class Player : MonoBehaviour
 {
     public static Player Instance;
@@ -22,7 +21,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-
         wrestlerCounter = WrestlerCounter.Instance;
         timer = Timer.Instance;
         
@@ -43,8 +41,6 @@ public class Player : MonoBehaviour
     private void LookAtCam()
     {
         transform.DORotate(new Vector3(0f,180,0f), 0.5f);
-        //Vector3 lookAt = new Vector3(cameraControl.WinCam.transform.position.x, transform.position.y, cameraControl.WinCam.transform.position.z);
-        //transform.DOLookAt(lookAt, 0.5f);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -53,9 +49,6 @@ public class Player : MonoBehaviour
         {
             OnHealthKitPicked?.Invoke(this, EventArgs.Empty);
         }
-
-        
-
     }
 
     private void OnTriggerExit(Collider other)

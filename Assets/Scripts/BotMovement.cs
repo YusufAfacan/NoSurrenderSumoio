@@ -1,22 +1,21 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class BotMovement : MonoBehaviour
 {
-    private bool isGoingForPepper;
-
     private WrestlerAnimator animator;
     private Wrestler wrestler;
     private Rigidbody rb;
-    public GameObject movementFX;
-    [SerializeField] private float sightRadius;
-
     private Timer timer;
+    private ObjectPooler pooler;
+
+    public GameObject movementFX;
+    public GameObject currentTarget;
+
+    [SerializeField] private float sightRadius;
 
     [SerializeField]
     [Range(0f, 10f)]
@@ -25,19 +24,11 @@ public class BotMovement : MonoBehaviour
     [Range(360, 720)]
     private float rotationSpeed;
 
-    private bool isGoingToTarget;
-
-    public GameObject currentTarget;
-
-    private bool hasTarget;
-
-    private ObjectPooler pooler;
     private void Awake()
     {
         wrestler = GetComponent<Wrestler>();
         animator = GetComponent<WrestlerAnimator>();
         rb = GetComponent<Rigidbody>();
-
     }
 
     // Start is called before the first frame update
@@ -47,7 +38,6 @@ public class BotMovement : MonoBehaviour
         timer = Timer.Instance;
         timer.OnTimeUp += Timer_OnTimeUp;
         pooler.OnObjectSpawned += Pooler_OnObjectSpawned;
-        //StartCoroutine(DecideTarget());
         DecideNewTarget();
     }
 
@@ -110,20 +100,17 @@ public class BotMovement : MonoBehaviour
                 currentTarget = WrestlerInWorstSituation();
             }
         }
-        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         DecideNewTarget();
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
         DecideNewTarget();
     }
-
 
     void FixedUpdate()
     {
@@ -161,6 +148,7 @@ public class BotMovement : MonoBehaviour
                 movementFX.SetActive(true);
             }
         }
+
         else
         {
             DecideNewTarget();
@@ -191,7 +179,6 @@ public class BotMovement : MonoBehaviour
         }
 
         return closestHealthKit;
-
     }
 
     private GameObject ClosestPepper()
@@ -218,7 +205,6 @@ public class BotMovement : MonoBehaviour
         }
 
         return closestPepper;
-
     }
 
     private GameObject ClosestWrestler()
@@ -248,7 +234,6 @@ public class BotMovement : MonoBehaviour
         wrestlers.Clear();
 
         return closestWrestler;
-
     }
 
     private GameObject WrestlerInWorstSituation()
@@ -278,9 +263,5 @@ public class BotMovement : MonoBehaviour
         }
 
         return worstWrestler;
-
-
     }
-
-
 }

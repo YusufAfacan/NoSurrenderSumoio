@@ -42,7 +42,7 @@ public class Wrestler : MonoBehaviour
 
     private void OnCollisionEnter(Collision Collision)
     {
-        // check if this collided with an opponent wrestler or scene prop
+        // check if this collided with an opponent wrestler or something else
         if (Collision.transform.TryGetComponent(out Wrestler collidedWrestler))
         {
             Vector3 pos = transform.position;

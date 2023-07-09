@@ -6,18 +6,17 @@ public class CameraControl : MonoBehaviour
 {
     public static CameraControl Instance;
 
+    private WrestlerCounter wrestlerCounter;
     private Timer timer;
+
     public CinemachineVirtualCamera topDownCam;
     public CinemachineVirtualCamera WinCam;
-
-    private WrestlerCounter wrestlerCounter;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         wrestlerCounter = WrestlerCounter.Instance;

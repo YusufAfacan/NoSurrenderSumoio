@@ -1825,8 +1825,8 @@ MonoBehaviour:
   canMove: 0
   moveSpeed: 5
   bodySize: 1
-  bodySizeIncrement: 0.1
-  maxBodySize: 2
+  bodySizeIncrement: 0.2
+  maxBodySize: 3
   isOnFever: 0
   feverMultiplier: 3
   FrontToFrontApplied: 12
@@ -1875,10 +1875,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementFX: {fileID: 5142504304998629225}
+  currentTarget: {fileID: 0}
   sightRadius: 20
   movementSpeed: 5
   rotationSpeed: 360
-  currentTarget: {fileID: 0}
 --- !u!1 &7322347563236664602
 GameObject:
   m_ObjectHideFlags: 0

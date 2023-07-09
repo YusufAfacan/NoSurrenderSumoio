@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +14,5 @@ public class PauseButton : MonoBehaviour
     {
         pausePanel.SetActive(true);
         Time.timeScale = 0;
-        Debug.Log("but");
     }
 }

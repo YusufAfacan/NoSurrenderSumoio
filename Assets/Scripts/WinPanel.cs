@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -24,11 +22,10 @@ public class WinPanel : MonoBehaviour
     {
         pointCounter = ScoreCounter.Instance;
         wrestlerCounter = WrestlerCounter.Instance;
-
         wrestlerCounter.OnNoBotRemaining += WrestlerCounter_OnNoBotRemaining;
     }
 
-    private void WrestlerCounter_OnNoBotRemaining(object sender, System.EventArgs e)
+    private void WrestlerCounter_OnNoBotRemaining(object sender, EventArgs e)
     {
         ShowWinPanel();
     }
@@ -37,7 +34,6 @@ public class WinPanel : MonoBehaviour
     {
         winPanel.SetActive(true);
         scoreText.text = pointCounter.currentScore.ToString();
-
         OnResultShown?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WrestlerAnimator : MonoBehaviour
@@ -7,8 +5,6 @@ public class WrestlerAnimator : MonoBehaviour
     Animator animator;
 
     private const string ISRUNNING = "isRunning";
-
-
 
     private void Awake()
     {
@@ -22,6 +18,6 @@ public class WrestlerAnimator : MonoBehaviour
 
     public void NotRunning()
     {
-        animator?.SetBool( ISRUNNING, false );
+        animator.SetBool( ISRUNNING, false );
     }
 }

@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Sprites;
 using UnityEngine;
-using UnityEngine.ProBuilder.MeshOperations;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -13,8 +9,9 @@ public class PlayerMovement : MonoBehaviour
     private Wrestler wrestler;
     private Rigidbody rb;
     private WrestlerCounter wrestlerCounter;
-    public GameObject movementFX;
     private Timer timer;
+
+    public GameObject movementFX;
 
     [SerializeField]
     [Range(0f, 10f)]

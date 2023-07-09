@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     private Wrestler wrestler;
+
     public bool lastHitByPlayer;
     public string wrestlerName;
     public TextMeshPro nameText;
@@ -13,7 +14,7 @@ public class Bot : MonoBehaviour
     public event EventHandler<OnDefeatedByPlayerEventArgs> OnDefeatedByPlayer;
     public class OnDefeatedByPlayerEventArgs : EventArgs
     {
-        public float bodySize;
+        public float bodySize; // bodySize passed as player gains score based on
     }
 
     private void Awake()
@@ -38,11 +39,6 @@ public class Bot : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-       
-    }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Arena"))
@@ -60,15 +56,5 @@ public class Bot : MonoBehaviour
 
             gameObject.SetActive(false);
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Water"))
-        {
-            
-        }
-
-        
     }
 }

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -24,7 +22,6 @@ public class TimeUpPanel : MonoBehaviour
     {
         timer = Timer.Instance;
         scoreCounter = ScoreCounter.Instance;
-
         timer.OnTimeUp += Timer_OnTimeUp;
     }
 
@@ -39,5 +36,4 @@ public class TimeUpPanel : MonoBehaviour
         scoreText.text = scoreCounter.currentScore.ToString();
         OnResultShown?.Invoke(this, EventArgs.Empty);
     }
-
 }

@@ -30,8 +30,6 @@ public class ObjectPooler : MonoBehaviour
 
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
-    
-
     private void Awake()
     {
         Instance = this;
@@ -71,13 +69,12 @@ public class ObjectPooler : MonoBehaviour
             poolDictionary.Add(pool.tag, objectPool);
 
 
-            // if object has an spawn interval spawning of  object in that interval initiated
+            // if object has an spawn interval, spawning of object in that interval initiated
 
             if (pool.spawnInterval > 0)
             {
                 StartCoroutine(StartSpawningDuringGame(pool.spawnTime, pool.spawnInterval, pool.tag));
             }
-
         }
     }
 
@@ -94,7 +91,7 @@ public class ObjectPooler : MonoBehaviour
             // random xPos of spawnPosition
             float xPos = Random.Range(-spawnRadius, spawnRadius);
 
-            // zPosition of spawnPosition limited so position stays in radius
+            // zPosition of spawnPosition limited so position stays in radius as game area is circular
             float zBorder = Mathf.Sqrt(Mathf.Pow(spawnRadius,2) - Mathf.Pow(xPos,2));
             float zPos = Random.Range(-zBorder, zBorder);
 

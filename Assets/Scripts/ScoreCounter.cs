@@ -1,17 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 public class ScoreCounter : MonoBehaviour
 {
-
     public static ScoreCounter Instance;
     public int currentScore;
     public int healthKitPointValue;
     public int botDefeatBaseValue;
     public TextMeshProUGUI text;
-    // Start is called before the first frame update
-
     public Bot[] botsInGame;
 
     private void Awake()
@@ -35,12 +30,10 @@ public class ScoreCounter : MonoBehaviour
 
     private void Bot_OnDefeatedByPlayer(object sender, Bot.OnDefeatedByPlayerEventArgs e)
     {
-        
-        currentScore += botDefeatBaseValue + ((int)(e.bodySize * 1000));
+        currentScore += botDefeatBaseValue + ((int)(e.bodySize * botDefeatBaseValue));
         UpdatePointText();
     }
 
-  
     private void Player_OnHealthKitPicked(object sender, System.EventArgs e)
     {
         currentScore += healthKitPointValue;
